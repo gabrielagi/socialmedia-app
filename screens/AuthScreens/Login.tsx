@@ -4,7 +4,6 @@ import React from 'react';
 import { Alert, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
 
 export default class Login extends React.Component {
-
   state = {
     niceNumber: 0
   }
@@ -22,6 +21,9 @@ export default class Login extends React.Component {
   }
 
   render() {
+    this.props.navigation.setOptions({
+        headerTitle: 'Like bunnies'
+    })
     return (
       <View style={{
         flex: 1, backgroundColor: 'red', alignItems: 'center', justifyContent: 'center',

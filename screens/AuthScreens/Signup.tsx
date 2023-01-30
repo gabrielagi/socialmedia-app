@@ -29,6 +29,11 @@ export default class Signup extends React.Component {
        <Text>
         SignUp Page
        </Text>
+       <TouchableOpacity
+       style={{backgroundColor: 'lightblue', margin:10, padding:10, borderRadius:5}}
+       onPress={()=> this.props.navigation.navigate('Login')}>
+        <Text>Go to Login page</Text>
+       </TouchableOpacity>
       </View>
     )}
     }
