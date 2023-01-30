@@ -2,9 +2,8 @@ import { Component } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Alert, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
-import SwitchNavigator from './navigation/LoginNavigator'
 
-export default class App extends React.Component {
+export default class Login extends React.Component {
 
   state = {
     niceNumber: 0
@@ -24,6 +23,17 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <SwitchNavigator/>
+      <View style={{
+        flex: 1, backgroundColor: 'red', alignItems: 'center', justifyContent: 'center',
+    }}>
+       <Text>
+        Login Page
+       </Text>
+       <TouchableOpacity
+       style={{backgroundColor: 'pink', margin:10, padding:10, borderRadius:5}}
+       onPress={()=> this.props.navigation.navigate('Signup')}>
+        <Text>Go to Signup page</Text>
+       </TouchableOpacity>
+      </View>
     )}
     }
