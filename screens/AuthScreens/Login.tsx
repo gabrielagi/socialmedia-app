@@ -1,5 +1,5 @@
 
-import { View, Text, StyleSheet, ImageBackground, TextInput, Dimensions, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet, ImageBackground, TextInput, Dimensions, TouchableOpacity, ScrollView } from "react-native"
 import React, { useState } from 'react';
 
 //const image2 = {uri: 'asset:/backsma.png'};
@@ -10,6 +10,7 @@ const Login = () => {
   const [pass, setPass] = useState('');
   const [rePass, setRePass] = useState('');
   const [isRegister, setIsRegister] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const handleLogin = () => {
     console.log(email, pass);
@@ -20,8 +21,19 @@ const Login = () => {
   } 
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFEBCD'}}>
-      <View style={styles.loginFormContainer}>
+    //<View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFEBCD'}}>
+    <ScrollView style={styles.scrollView}>
+      
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: 28,
+              color: '#212121',
+              marginVertical: 20,
+            }}
+          >
+            {isRegister ? 'Sign in' : 'Login'}
+          </Text><View style={styles.loginFormContainer}>
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
@@ -58,6 +70,8 @@ const Login = () => {
         }
     </View>
 
+        <View style={{height: 20}}/>
+
     <TouchableOpacity style={styles.buttonLogin} onPress={isRegister ? handleRegister : handleLogin}>
       <Text style={styles.buttonText}>{isRegister ? 'Sign in' : 'Login'}</Text>
     </TouchableOpacity>
@@ -68,8 +82,8 @@ const Login = () => {
       <Text>{isRegister ? 'Login' : 'Register'}</Text>      
     </TouchableOpacity>
 
-  </View>
-  
+  </ScrollView>
+//</View>
 );
 }
 
@@ -125,5 +139,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  scrollView: {
+    backgroundColor: '#FFEBCD',
+    marginHorizontal: 30,
   },
 });
