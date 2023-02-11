@@ -1,23 +1,12 @@
-import { Component } from 'react';
+
+import { View, Text } from "react-native"
 import React from 'react';
-import SwitchNavigator from './navigation/LoginNavigator'
-import thunkMiddleware from 'redux-thunk'
-import { Provider } from 'react-redux';
-//import { applyMiddleware } from 'redux'
-import { configureStore } from '@reduxjs/toolkit'
-import rootReducer from './reducers/index'
+import Login from "./screens/AuthScreens/Login";
 
-const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-})
+const App = () => {
+  return (
+    <Login/>
+  )
+}
 
-export default class App extends React.Component {
-
-  render() {
-    return (
-      <Provider store={store}>
-        <SwitchNavigator/>
-      </Provider>
-    )}
-    }
+export default App
