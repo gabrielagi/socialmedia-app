@@ -8,10 +8,15 @@ const Login = () => {
 
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [rePass, setRePass] = useState('');
   const [isRegister, setIsRegister] = useState(false);
 
   const handleLogin = () => {
     console.log(email, pass);
+  } 
+
+  const handleRegister = () => {
+    console.log('register');
   } 
 
   return (
@@ -28,26 +33,40 @@ const Login = () => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Password</Text>
+          <Text style={styles.inputLabel}>Confirm Password</Text>
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder="Confirm Password"
+            maxLength={100}
+            value={rePass}
+            onChangeText={val => setRePass(val)}
+            secureTextEntry
+          />
+        </View>
+
+        {isRegister && <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Confirm</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password"
             maxLength={100}
             value={pass}
             onChangeText={val => setPass(val)}
             secureTextEntry
           />
         </View>
+        }
     </View>
-    <TouchableOpacity style={styles.buttonLogin}>
-      <Text style={styles.buttonText}>Login</Text>
-    </TouchableOpacity>
-    <TouchableOpacity 
-    onPress={() => setIsRegister(true)}
-    style={styles.buttonRegister}>
-      <Text>Register</Text>      
-    </TouchableOpacity>
 
+    <TouchableOpacity style={styles.buttonLogin} onPress={isRegister ? handleRegister : handleLogin}>
+      <Text style={styles.buttonText}>{isRegister ? 'Sign in' : 'Login'}</Text>
+    </TouchableOpacity>
+    
+    <TouchableOpacity 
+    onPress={() => setIsRegister(!isRegister)}
+    style={styles.buttonRegister}>
+      <Text>{isRegister ? 'Login' : 'Register'}</Text>      
+    </TouchableOpacity>
 
   </View>
   
