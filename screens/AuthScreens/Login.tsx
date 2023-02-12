@@ -1,29 +1,83 @@
 
 import { View, Text, StyleSheet, ImageBackground, TextInput, Dimensions, TouchableOpacity, ScrollView } from "react-native"
 import React, { useState } from 'react';
-
-//const image2 = {uri: 'asset:/backsma.png'};
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 const Login = () => {
-
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [rePass, setRePass] = useState('');
   const [isRegister, setIsRegister] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [userInfo, setUserInfo] = useState<FirebaseAuthTypes.User>();
 
-  const handleLogin = () => {
-    console.log(email, pass);
-  } 
+  const handleLogin = async () => {
+    try {
+      await auth()
+        .signInWithEmailAndPassword(email, pass)
+        .then(userCredential => {
+          const user = userCredential.user;
 
-  const handleRegister = () => {
-    console.log('register');
-  } 
+          if (user) {
+            // console.log(user);
+            setIsLogin(true);
+          }
+        });
+    } catch (error) {
+      console.log('can not login: ', error);
+    }
+  };
 
+  const handleRegister = async () => {
+    // check value
+    if (email && pass && rePass) {
+      if (rePass !== pass) {
+        console.log('password not match');
+      } else {
+        if (pass.length < 6) {
+          console.log('password must contain at least 6 characters');
+        } else {
+          await auth()
+            .createUserWithEmailAndPassword(email, pass)
+            .then(userCredential => {
+              const user = userCredential.user;
+
+              if (user) {
+                setUserInfo(user);
+                setIsRegister(false);
+              }
+            })
+            .catch(error => {
+              console.log('can not register: ', error);
+            });
+        }
+      }
+    }
+  };
   return (
-    //<View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFEBCD'}}>
-    <ScrollView style={styles.scrollView}>
-      
+    <ImageBackground
+      source={require('../assets/images/bg-3.png')}
+      resizeMode="cover"
+      style={styles.container}
+    >
+      {isLogin && userInfo ? (
+        <>
+          <Text>{userInfo.email}</Text>
+
+          <TouchableOpacity
+            onPress={() =>
+              auth()
+                .signOut()
+                .then(() => {
+                  setIsLogin(false);
+                })
+            }
+          >
+            <Text>Logout</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <ScrollView style={{flex: 1}}>
           <Text
             style={{
               fontWeight: 'bold',
@@ -33,59 +87,76 @@ const Login = () => {
             }}
           >
             {isRegister ? 'Sign in' : 'Login'}
-          </Text><View style={styles.loginFormContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="email"
-            onChangeText={val => setEmail(val)}
-            maxLength={100}
-            keyboardType="email-address"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Confirm Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            maxLength={100}
-            value={rePass}
-            onChangeText={val => setRePass(val)}
-            secureTextEntry
-          />
-        </View>
+          </Text>
 
-        {isRegister && <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Confirm</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            maxLength={100}
-            value={pass}
-            onChangeText={val => setPass(val)}
-            secureTextEntry
-          />
-        </View>
-        }
-    </View>
+          <View style={styles.loginFormContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Email</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="email"
+                value={email}
+                onChangeText={val => setEmail(val)}
+                maxLength={100}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+              />
+            </View>
 
-        <View style={{height: 20}}/>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Password</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                autoCapitalize="none"
+                autoComplete="off"
+                maxLength={100}
+                value={pass}
+                onChangeText={val => setPass(val)}
+                secureTextEntry
+              />
+            </View>
 
-    <TouchableOpacity style={styles.buttonLogin} onPress={isRegister ? handleRegister : handleLogin}>
-      <Text style={styles.buttonText}>{isRegister ? 'Sign in' : 'Login'}</Text>
-    </TouchableOpacity>
-    
-    <TouchableOpacity 
-    onPress={() => setIsRegister(!isRegister)}
-    style={styles.buttonRegister}>
-      <Text>{isRegister ? 'Login' : 'Register'}</Text>      
-    </TouchableOpacity>
+            {isRegister && (
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Confirm</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="confirm password"
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  maxLength={100}
+                  value={rePass}
+                  onChangeText={val => setRePass(val)}
+                  secureTextEntry
+                />
+              </View>
+            )}
+          </View>
 
-  </ScrollView>
-//</View>
-);
-}
+          <View style={{height: 20}} />
+
+          <TouchableOpacity
+            style={styles.buttonLogin}
+            onPress={isRegister ? handleRegister : handleLogin}
+          >
+            <Text style={styles.buttonText}>
+              {isRegister ? 'Sign in' : 'Login'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setIsRegister(!isRegister)}
+            style={styles.buttonRegister}
+          >
+            <Text>{isRegister ? 'Login' : 'Register'}</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
+    </ImageBackground>
+  );
+};
 
 export default Login;
 
@@ -141,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollView: {
-    backgroundColor: '#FFEBCD',
-    marginHorizontal: 30,
-  },
+        backgroundColor: '#FFEBCD',
+        marginHorizontal: 30,
+      },
 });
